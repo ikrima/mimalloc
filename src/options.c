@@ -18,6 +18,10 @@ static uintptr_t mi_max_error_count = 16;  // stop outputting errors after this
 
 static void mi_add_stderr_output();
 
+int mi_debug_level(void) mi_attr_noexcept {
+  return MI_DEBUG;
+}
+
 int mi_version(void) mi_attr_noexcept {
   return MI_MALLOC_VERSION;
 }
@@ -343,7 +347,7 @@ static volatile _Atomic(void*) mi_error_arg;     // = NULL
 
 static void mi_error_default(int err) {
   UNUSED(err);
-#if (MI_DEBUG>0) 
+#if (MI_DEBUG>0)
   if (err==EFAULT) {
     #ifdef _MSC_VER
     __debugbreak();
@@ -420,23 +424,23 @@ static bool mi_getenv(const char* name, char* result, size_t result_size) {
   return (len > 0 && len < result_size);
 }
 #elif !defined(MI_USE_ENVIRON) || (MI_USE_ENVIRON!=0)
-// On Posix systemsr use `environ` to acces environment variables 
+// On Posix systemsr use `environ` to acces environment variables
 // even before the C runtime is initialized.
 #if defined(__APPLE__)
 #include <crt_externs.h>
 static char** mi_get_environ(void) {
   return (*_NSGetEnviron());
 }
-#else 
+#else
 extern char** environ;
 static char** mi_get_environ(void) {
   return environ;
 }
 #endif
 static bool mi_getenv(const char* name, char* result, size_t result_size) {
-  if (name==NULL) return false;  
+  if (name==NULL) return false;
   const size_t len = strlen(name);
-  if (len == 0) return false;  
+  if (len == 0) return false;
   char** env = mi_get_environ();
   if (env == NULL) return false;
   // compare up to 256 entries
@@ -450,7 +454,7 @@ static bool mi_getenv(const char* name, char* result, size_t result_size) {
   }
   return false;
 }
-#else  
+#else
 // fallback: use standard C `getenv` but this cannot be used while initializing the C runtime
 static bool mi_getenv(const char* name, char* result, size_t result_size) {
   // cannot call getenv() when still initializing the C runtime.
@@ -477,7 +481,7 @@ static bool mi_getenv(const char* name, char* result, size_t result_size) {
 }
 #endif
 
-static void mi_option_init(mi_option_desc_t* desc) {  
+static void mi_option_init(mi_option_desc_t* desc) {
   // Read option value from the environment
   char buf[64+1];
   mi_strlcpy(buf, "mimalloc_", sizeof(buf));

@@ -143,6 +143,7 @@ mi_decl_export void mi_register_error(mi_error_fun* fun, void* arg);
 
 mi_decl_export void mi_collect(bool force)    mi_attr_noexcept;
 mi_decl_export int  mi_version(void)          mi_attr_noexcept;
+mi_decl_export int  mi_debug_level(void)      mi_attr_noexcept;
 mi_decl_export void mi_stats_reset(void)      mi_attr_noexcept;
 mi_decl_export void mi_stats_merge(void)      mi_attr_noexcept;
 mi_decl_export void mi_stats_print(void* out) mi_attr_noexcept;  // backward compatibility: `out` is ignored and should be NULL
