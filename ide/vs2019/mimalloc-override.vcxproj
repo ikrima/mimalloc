@@ -127,6 +127,9 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SupportJustMyCode>false</SupportJustMyCode>
       <CompileAs>Default</CompileAs>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <AdditionalDependencies>$(ProjectDir)\..\..\bin\mimalloc-redirect.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -136,6 +139,7 @@
       </ModuleDefinitionFile>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
       <Command>COPY /Y $(ProjectDir)..\..\bin\mimalloc-redirect.dll $(OutputPath)</Command>
@@ -191,6 +195,8 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <CompileAs>Default</CompileAs>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
