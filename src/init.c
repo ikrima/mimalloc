@@ -430,8 +430,19 @@ mi_decl_export void _mi_redirect_entry(DWORD reason) {
     mi_thread_done();
   }
 }
+#if defined(MI_NODLLMAIN)
+static bool mi_allocator_init(const char** message) {
+  if (message != NULL) *message = NULL;
+  return true;
+}
+static void mi_allocator_done() {
+  // nothing to do
+}
+#else
 __declspec(dllimport) bool mi_allocator_init(const char** message);
 __declspec(dllimport) void mi_allocator_done();
+#endif
+
 #ifdef __cplusplus
 }
 #endif
@@ -522,6 +533,16 @@ static void mi_process_done(void) {
 
 
 #if defined(_WIN32) && defined(MI_SHARED_LIB)
+  #if defined(MI_NODLLMAIN)
+  void mi_dllmain(int reason) mi_attr_noexcept {
+    if (reason == DLL_PROCESS_ATTACH) {
+      mi_process_load();
+    }
+    else if (reason == DLL_THREAD_DETACH) {
+      if (!mi_is_redirected()) mi_thread_done();
+    }
+  }
+  #else
   // Windows DLL: easy to hook into process_init and thread_done
   __declspec(dllexport) BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved) {
     UNUSED(reserved);
@@ -534,6 +555,7 @@ static void mi_process_done(void) {
     }
     return TRUE;
   }
+  #endif
 
 #elif defined(__cplusplus)
   // C++: use static initialization to detect process start
