@@ -748,7 +748,11 @@ but we call `exit` instead (i.e. not returning).
 static bool mi_try_new_handler(bool nothrow) {
   std::new_handler h = std::get_new_handler();
   if (h==NULL) {
-    if (!nothrow) throw std::bad_alloc();
+  #if defined(__cpp_exceptions) || defined(__EXCEPTIONS) || defined(_CPPUNWIND)
+    if (!nothrow) throw std::bad_alloc();  
+  #else
+    UNUSED(nothrow);
+  #endif
     return false;
   }
   else {
