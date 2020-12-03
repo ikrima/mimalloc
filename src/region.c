@@ -97,7 +97,9 @@ typedef struct mem_region_s {
 } mem_region_t;
 
 // The region map
+ES2WRN_DISABLE_CLANG("-Wglobal-constructors")
 static mem_region_t regions[MI_REGION_MAX];
+ES2WRN_RESTORE_CLANG()
 
 // Allocated regions
 static _Atomic(uintptr_t) regions_count; // = 0;        
