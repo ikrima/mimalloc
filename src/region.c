@@ -98,7 +98,7 @@ typedef struct mem_region_s {
 } mem_region_t;
 
 // The region map
-ES2WRN_DISABLE(CLANG,"-Wglobal-constructors")
+ES2WRN_DISABLE(CLANG,global-constructors)
 static mem_region_t regions[MI_REGION_MAX];
 ES2WRN_RESTORE(CLANG)
 
@@ -290,7 +290,7 @@ static void* mi_region_try_alloc(size_t blocks, bool* commit, bool* large, bool*
   mi_assert_internal(!(info.x.is_large && !*large));
   mi_assert_internal(start != NULL);
 
-  *is_zero   = _mi_bitmap_claim(&region->dirty, 1, blocks, bit_idx, NULL);  
+  *is_zero   = _mi_bitmap_claim(&region->dirty, 1, blocks, bit_idx, NULL);
   *large     = info.x.is_large;
   *is_pinned = info.x.is_pinned;
   *memid     = mi_memid_create(region, bit_idx);
@@ -365,7 +365,7 @@ void* _mi_mem_alloc_aligned(size_t size, size_t alignment, bool* commit, bool* l
   size_t arena_memid;
   const size_t blocks = mi_region_block_count(size);
   if (blocks <= MI_REGION_MAX_OBJ_BLOCKS && alignment <= MI_SEGMENT_ALIGN) {
-    p = mi_region_try_alloc(blocks, commit, large, is_pinned, is_zero, memid, tld);    
+    p = mi_region_try_alloc(blocks, commit, large, is_pinned, is_zero, memid, tld);
     if (p == NULL) {
       _mi_warning_message("unable to allocate from region: size %zu\n", size);
     }
@@ -429,7 +429,7 @@ void _mi_mem_free(void* p, size_t size, size_t id, bool full_commit, bool any_re
     }
 
     // reset the blocks to reduce the working set.
-    if (!info.x.is_large && !info.x.is_pinned && mi_option_is_enabled(mi_option_segment_reset) 
+    if (!info.x.is_large && !info.x.is_pinned && mi_option_is_enabled(mi_option_segment_reset)
        && (mi_option_is_enabled(mi_option_eager_commit) ||
            mi_option_is_enabled(mi_option_reset_decommits))) // cannot reset halfway committed segments, use only `option_page_reset` instead
     {
